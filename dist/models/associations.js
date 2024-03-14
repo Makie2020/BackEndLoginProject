@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const permissions_1 = require("./permissions");
+const roles_1 = require("./roles");
+const roles_permissions_1 = require("./roles_permissions");
+const user_1 = require("./user");
+const users_roles_1 = __importDefault(require("./users_roles"));
+users_roles_1.default.belongsTo(user_1.User, { foreignKey: 'id' });
+users_roles_1.default.belongsTo(roles_1.Role, { foreignKey: 'id' });
+users_roles_1.default.hasMany(roles_permissions_1.RolesPermissions, { foreignKey: 'role_id' });
+roles_permissions_1.RolesPermissions.hasMany(permissions_1.Permissions, { as: 'permissions', foreignKey: 'id' });
+roles_permissions_1.RolesPermissions.hasMany(roles_1.Role, { foreignKey: 'id' });
+user_1.User.hasOne(users_roles_1.default, { foreignKey: 'user_id' });
+user_1.User.hasMany(roles_permissions_1.RolesPermissions, { foreignKey: 'role_id' });
+roles_1.Role.hasMany(roles_permissions_1.RolesPermissions, { foreignKey: 'role_id' });
+roles_1.Role.hasOne(users_roles_1.default, { foreignKey: 'user_id' });
+permissions_1.Permissions.hasMany(roles_permissions_1.RolesPermissions, { foreignKey: 'permission_id' });
